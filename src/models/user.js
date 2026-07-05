@@ -20,6 +20,12 @@ const userSchema = new Schema(
             type: String,
             required: false,
             default: 'https://ac.goit.global/fullstack/react/default-avatar.jpg'
+        },
+        savedStories: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Story',
+            default: [],
+            index: true
         }
     },
     { 
