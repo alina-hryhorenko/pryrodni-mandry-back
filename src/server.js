@@ -9,7 +9,6 @@ import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
@@ -38,6 +37,7 @@ app.use(userRoutes);
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
+await connectMongoDB();
 
 await connectMongoDB();
 
