@@ -6,7 +6,7 @@ import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
-//import helmet from 'helmet';
+import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
 import {connectMongoDB} from './db/connectMongoDB.js';
 
@@ -20,7 +20,7 @@ app.use(cors({
     origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [],
     credentials: true
 }));
-//app.use(helmet);
+app.use(helmet);
 app.use(cookieParser());
 app.use(logger);
 
