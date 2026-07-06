@@ -6,7 +6,7 @@ import {
     getStoryByUserId,
     // getStoryByCategory,
     createStory
-} from '../controllers/storiesController';
+} from '../controllers/storiesController.js';
 
 const router = Router();
 
