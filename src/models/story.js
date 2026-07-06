@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const CATEGORIES = [
+export const CATEGORIES = [
     'routes',
     'eco-tips',
     'nature',
@@ -10,17 +10,17 @@ const CATEGORIES = [
 
 const storySchema = new Schema(
     {
-        userId: {
+        ownerId: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
             index: true
         },
-        image: {
+        img: {
             type: String,
             required: true
         },
-        header: {
+        title: {
             type: String,
             required: true,
             trim: true
@@ -30,11 +30,14 @@ const storySchema = new Schema(
             enum: CATEGORIES,
             required: true
         },
-        mainText: {
+        article: {
             type: String,
             required: true
         },
-        savesCount: { type: Number, default: 0 }
+        rate: {
+            type: Number,
+            required: false
+        },
     },
     {
         timestamps: true,
