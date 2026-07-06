@@ -1,31 +1,31 @@
-import { Schema, model } from "mongoose";
-import { CATEGORIES } from "../constants/tags";
+import { Schema, model } from 'mongoose';
+import { CATEGORIES } from '../constants/tags';
 
 const categorySchema = new Schema(
-    {
-        category: {
-            type: String,
-            enum: CATEGORIES,
-            required: true,
-            unique: true
-        },
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        img: {
-            type: String,
-            required: true
-        },
-        description: {
-            type: String,
-            required: false
-        }
+  {
+    category: {
+      type: String,
+      enum: CATEGORIES,
+      required: true,
+      unique: true,
     },
-    {
-        timestamps: true,
-    }
-)
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    img: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 export const Category = model('Category', categorySchema);
