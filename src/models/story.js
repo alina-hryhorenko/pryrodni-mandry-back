@@ -1,12 +1,5 @@
 import { Schema, model } from "mongoose";
-
-export const CATEGORIES = [
-    'routes',
-    'eco-tips',
-    'nature',
-    'culture',
-    'local-products'
-];
+import { CATEGORIES } from "../constants/tags";
 
 const storySchema = new Schema(
     {
