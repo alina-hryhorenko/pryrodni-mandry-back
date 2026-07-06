@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
     {
-        username: {
+        name: {
             type: String,
             trim: true
         },
@@ -16,10 +16,21 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        avatar: {
+        avatarUrl: {
             type: String,
             required: false,
             default: 'https://ac.goit.global/fullstack/react/default-avatar.jpg'
+        },
+        articlesAmount: {
+            type: Number,
+            required: false,
+            default: 0
+        },
+        savedArticles: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Story',
+            default: [],
+            index: true
         }
     },
     { 
@@ -28,8 +39,8 @@ const userSchema = new Schema(
 )
 
 userSchema.pre('save', function () {
-    if(!this.username){
-        this.username = this.email;
+    if(!this.name){
+        this.name = this.email;
     }
 })
 
