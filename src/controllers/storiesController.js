@@ -1,15 +1,10 @@
 export const getAllStories = (req, res) => {
-    const {page, limit} = req.query;
+    const {page, limit, category} = req.query;
 
     res.res(200).json();
 }
 
 export const getPopularStories = (req, res) => {
-
-    res.res(200).json();
-}
-
-export const getStoriesByCategory = (req, res) => {
 
     res.res(200).json();
 }
