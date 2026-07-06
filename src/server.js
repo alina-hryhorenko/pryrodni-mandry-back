@@ -30,13 +30,14 @@ app.use(cookieParser());
 app.use(logger);
 
 // Routes
-app.use(storiesRoutes);
-app.use(userRoutes);
+app.use('/api', storiesRoutes);
+app.use('/api', userRoutes);
 
 // Error Handlers
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
+
 await connectMongoDB();
 
 app.listen(PORT, () => {
