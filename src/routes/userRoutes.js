@@ -3,6 +3,6 @@ import { getPopularUsers } from '../controllers/userController.js';
 
 const router = Router();
 
-router.get('/api/users/popular', getPopularUsers);
+router.get('/users/popular', getPopularUsers);
 
 export default router;
