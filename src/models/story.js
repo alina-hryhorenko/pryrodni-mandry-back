@@ -42,7 +42,7 @@ const storySchema = new Schema(
     {
         timestamps: true,
     }
-)
+);
 
 storySchema.index({ savesCount: -1 });
 export const Story = model('Story', storySchema);
