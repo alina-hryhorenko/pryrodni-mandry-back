@@ -23,3 +23,7 @@ export const getStoryByUserId = (req, res) => {
 
     res.res(200).json();
 }
+
+export const createStory = (req, res) => {
+    res.res(200).json();
+}
