@@ -1,29 +1,46 @@
-export const getAllStories = (req, res) => {
-    const {page=1, limit=10, category} = req.query;
+import { Story } from '../models/story.js';
 
-    res.res(200).json();
-}
+export const getAllStories = (req, res) => {
+    const { page = 1, limit = 10, category } = req.query;
+
+    return res.status(200).json();
+};
 
 export const getPopularStories = (req, res) => {
+    return res.status(200).json();
+};
 
-    res.res(200).json();
-}
+export const getStoryByStoryId = async (req, res) => {
+    try {
+        const { storyId } = req.params;
 
-export const getStoryByStoryId = (req, res) => {
+        const story = await Story.findById(storyId)
+            .populate('author'); 
 
-    res.res(200).json();
-}
+        if (!story) {
+            return res.status(404).json({
+                message: 'Story not found',
+            });
+        }
+
+        return res.status(200).json(story);
+
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Server error',
+            error: error.message,
+        });
+    }
+};
 
 export const getStoryByUserId = (req, res) => {
-
-    res.res(200).json();
-}
+    return res.status(200).json();
+};
 
 // export const getStoryByCategory = (req, res) => {
-
-//     res.res(200).json();
+//     return res.status(200).json();
 // }
 
 export const createStory = (req, res) => {
-    res.res(200).json();
-}
+    return res.status(200).json();
+};
