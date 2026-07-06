@@ -30,8 +30,8 @@ app.use(cookieParser());
 app.use(logger);
 
 // Routes
-app.use(storiesRoutes);
-app.use(userRoutes);
+app.use('/api', storiesRoutes);
+
 
 // Error Handlers
 app.use(notFoundHandler);
