@@ -7,6 +7,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
+import storiesRoutes from './routes/storiesRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -23,7 +24,7 @@ app.use(cookieParser());
 app.use(logger);
 
 // Routes
-
+app.use(storiesRoutes)
 
 
 // Error Handlers
