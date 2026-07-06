@@ -1,13 +1,14 @@
-import express from 'express'
+import express from 'express';
 import 'dotenv/config';
-import cors from 'cors'
-import cookieParser from 'cookie-parser'
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
-import helmet from 'helmet';
+//import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
+import {connectMongoDB} from './db/connectMongoDB.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -19,19 +20,19 @@ app.use(cors({
     origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [],
     credentials: true
 }));
-app.use(helmet);
+//app.use(helmet);
 app.use(cookieParser());
 app.use(logger);
 
 // Routes
-app.use(storiesRoutes)
+app.use('/api', storiesRoutes);
 
 
 // Error Handlers
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
-
+await connectMongoDB();//MongoDB
 app.listen(PORT, () => {
-     console.log(`Server is running on port ${PORT}`)
+    console.log(`Server is running on port ${PORT}`);
 });

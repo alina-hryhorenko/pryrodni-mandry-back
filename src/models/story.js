@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { CATEGORIES } from "../constants/tags";
+import { CATEGORIES } from "../constants/tags.js";
 
 const storySchema = new Schema(
     {
@@ -35,7 +35,7 @@ const storySchema = new Schema(
     {
         timestamps: true,
     }
-)
+);
 
 storySchema.index({ savesCount: -1 });
 export const Story = model('Story', storySchema);
