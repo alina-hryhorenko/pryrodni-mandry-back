@@ -68,8 +68,7 @@ export const getStoryByUserId = (req, res) => {
 };
 
 // export const getStoryByCategory = (req, res) => {
-
-//     res.res(200).json();
+//     return res.status(200).json();
 // }
 
 export const createStory = (req, res) => {

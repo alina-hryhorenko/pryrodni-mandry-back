@@ -8,19 +8,24 @@ import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
-import {connectMongoDB} from './db/connectMongoDB.js';
+import userRoutes from './routes/userRoutes.js';
+import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [],
-    credentials: true
-}));
-app.use(helmet);
+app.use(
+  cors({
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(',')
+      : [],
+    credentials: true,
+  }),
+);
+app.use(helmet());
 app.use(cookieParser());
 app.use(logger);
 
@@ -32,7 +37,10 @@ app.use('/api', storiesRoutes);
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
-await connectMongoDB();//MongoDB
+await connectMongoDB();
+
+await connectMongoDB();
+
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
