@@ -8,6 +8,7 @@ import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
+import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -31,6 +32,7 @@ app.use(storiesRoutes)
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
+await connectMongoDB();
 
 app.listen(PORT, () => {
      console.log(`Server is running on port ${PORT}`)
