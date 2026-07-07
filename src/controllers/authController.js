@@ -46,3 +46,7 @@ export const logoutUser = async (req, res) => {
 
   res.status(204).send();
 };
+
+export const refreshUserSession = async (req, res) => {
+  const { sessionId, refreshToken } = req.cookies;
+};
