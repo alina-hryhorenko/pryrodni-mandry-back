@@ -9,6 +9,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
@@ -30,8 +31,9 @@ app.use(cookieParser());
 app.use(logger);
 
 // Routes
+app.use(authRoutes);
 app.use('/api', storiesRoutes);
-
+app.use('/api', userRoutes);
 
 // Error Handlers
 app.use(notFoundHandler);
