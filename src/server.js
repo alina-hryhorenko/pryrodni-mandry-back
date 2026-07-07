@@ -8,7 +8,6 @@ import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
-import categoriesRoutes from './routes/categoriesRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
@@ -31,7 +30,6 @@ app.use(logger);
 
 // Routes
 app.use(storiesRoutes);
-app.use(categoriesRoutes);
 
 // Error Handlers
 app.use(notFoundHandler);

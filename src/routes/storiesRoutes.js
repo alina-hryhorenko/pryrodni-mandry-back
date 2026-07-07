@@ -1,17 +1,19 @@
-import { Router } from 'express'
-import { 
-    getAllStories, 
-    getPopularStories, 
-    getStoryByStoryId,
-    getStoryByUserId,
-    // getStoryByCategory,
-    createStory
-} from '../controllers/storiesController';
+import { Router } from 'express';
+import {
+  getAllStories,
+  getPopularStories,
+  getStoryByStoryId,
+  getStoryByUserId,
+  //   getStoryByCategory,
+  createStory,
+} from '../controllers/storiesController.js';
+import { getCategoriesWithCount } from '../controllers/categoriesController.js';
 
 const router = Router();
 
 // GET
 router.get('/stories', getAllStories);
+router.get('/stories/categories', getCategoriesWithCount);
 router.get('/stories/popular', getPopularStories);
 router.get('/story/:storyId', getStoryByStoryId);
 // router.get('/story/:category', getStoryByCategory);

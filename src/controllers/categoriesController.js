@@ -8,7 +8,7 @@ export const getCategoriesWithCount = async (req, res, next) => {
     const result = await Promise.all(
       categories.map(async (item) => {
         const count = await Story.countDocuments({
-          category: item.category,
+          category: item._id,
         });
 
         return {
