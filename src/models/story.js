@@ -26,6 +26,7 @@ const storySchema = new Schema(
     article: {
       type: String,
       required: true,
+      trim: true,
     },
     rate: {
       type: Number,
