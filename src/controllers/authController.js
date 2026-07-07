@@ -1,6 +1,8 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import { User } from '../models/user.js';
+import { Session } from '../models/session.js';
+import { createSession, setSessionCookies } from '../services/auth.js';
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -18,6 +20,15 @@ export const loginUser = async (req, res) => {
   if (!isValidPassword) {
     throw createHttpError(401, 'Invalid credentials');
   }
+
+  // Видаляємо стару сесію користувача
+  await Session.deleteOne({ userId: user._id });
+
+  // Створюємо нову сесію
+  const newSession = await createSession(user._id);
+
+  // 3. Викликаємо, передаємо об'єкт відповіді та сесію
+  setSessionCookies(res, newSession);
 
   res.status(200).json(user);
 };
