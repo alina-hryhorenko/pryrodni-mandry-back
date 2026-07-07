@@ -12,6 +12,7 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import healthRoutes from './routes/healthRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -36,7 +37,7 @@ app.use(authRoutes);
 app.use('/api', storiesRoutes);
 app.use('/api', userRoutes);
 app.use('/api', healthRoutes);
-
+app.use('/api', categoryRoutes);
 // Error Handlers
 app.use(notFoundHandler);
 app.use(errors());
