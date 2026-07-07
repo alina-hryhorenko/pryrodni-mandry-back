@@ -47,8 +47,37 @@ export const getAllStories = async (req, res) => {
   res.status(200).json({ page, limit, stories, totalPages, totalStories });
 };
 
-export const getPopularStories = (req, res) => {
-  res.res(200).json();
+export const getPopularStories = async (req, res) => {
+  try {
+    const limit = Number(req.query.limit) || 10;
+
+    const stories = await Story.find()
+      .sort({ rate: -1 })
+      .limit(limit)
+      .populate('ownerId', 'name avatarURL');
+
+    const result = stories.map((story) => ({
+      _id: story._id,
+      title: story.title,
+      img: story.img,
+      savedBySize: story.rate,
+      author: {
+        _id: story.ownerId._id,
+        name: story.ownerId.name,
+        avatarURL: story.ownerId.avatarURL,
+      },
+    }));
+
+    res.status(200).json({
+      status: 'success',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
 };
 
 export const getStoryByStoryId = async (req, res) => {

@@ -4,10 +4,13 @@ import {
   getPopularStories,
   getStoryByStoryId,
   getStoryByUserId,
-  // getStoryByCategory,
   createStory,
 } from '../controllers/storiesController.js';
-import { createStorySchema, getAllStoriesSchema, storyIdSchema } from '../validations/storiesValidation.js';
+import {
+  createStorySchema,
+  getAllStoriesSchema,
+  storyIdSchema,
+} from '../validations/storiesValidation.js';
 
 import { celebrate } from 'celebrate';
 
@@ -17,7 +20,6 @@ const router = Router();
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
 router.get('/stories/popular', getPopularStories);
 router.get('/story/:storyId', celebrate(storyIdSchema), getStoryByStoryId);
-// router.get('/story/:category', getStoryByCategory);
 router.get('/stories/:userId', getStoryByUserId);
 
 // POST
