@@ -1,7 +1,11 @@
 import { celebrate } from 'celebrate';
 import { Router } from 'express';
 import { loginUserSchema } from '../validations/authValidation.js';
-import { loginUser, logoutUser } from '../controllers/authController.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshUserSession,
+} from '../controllers/authController.js';
 
 const router = Router();
 
@@ -12,5 +16,6 @@ router.post(
 );
 
 router.post('/auth/logout', logoutUser);
+router.post('/auth/refresh', refreshUserSession);
 
 export default router;
