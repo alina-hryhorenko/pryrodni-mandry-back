@@ -31,13 +31,12 @@ app.use(logger);
 
 // Routes
 app.use('/api', storiesRoutes);
-
+app.use('/api', userRoutes);
 
 // Error Handlers
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
-await connectMongoDB();
 
 await connectMongoDB();
 
