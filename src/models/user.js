@@ -36,18 +36,18 @@ const userSchema = new Schema(
     { 
         timestamps: true,
     }
-)
+);
 
 userSchema.pre('save', function () {
     if(!this.name){
         this.name = this.email;
     }
-})
+});
 
 userSchema.methods.toJSON = function () {
     const obj = this.toObject();
     delete obj.password;
-    return obj
-}
+    return obj;
+};
 
 export const User = model('User', userSchema);
