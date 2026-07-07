@@ -1,5 +1,4 @@
-import { Schema, model } from 'mongoose';
-import { CATEGORIES } from '../constants/tags.js';
+import mongoose, { Schema, model } from 'mongoose';
 
 const storySchema = new Schema(
   {
@@ -19,8 +18,8 @@ const storySchema = new Schema(
       trim: true,
     },
     category: {
-      type: String,
-      enum: CATEGORIES,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
     article: {

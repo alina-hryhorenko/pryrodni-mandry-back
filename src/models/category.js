@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { CATEGORIES } from '../constants/tags.js';
 
-
 const categorySchema = new Schema(
   {
     category: {
