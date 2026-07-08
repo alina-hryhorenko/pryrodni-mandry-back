@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { celebrate } from 'celebrate';
 import {
   getAllUsers,
-  getPopularUsers,
   getCurrentUser,
   saveStory,
   unsaveStory,
@@ -14,9 +13,8 @@ import {
 import { authenticate } from '../middleware/authenticate.js';
 
 import {
-  getAllUsersSchema,
+  commonQuerySchema,
   getUserByIdSchema,
-  getCurrentUserStoriesSchema,
 } from '../validations/usersValidation.js';
 import {
   storyIdBodySchema,
@@ -26,19 +24,19 @@ import { upload } from '../middleware/multer.js';
 
 const router = Router();
 
-router.get('/users', celebrate(getAllUsersSchema), getAllUsers);
+router.get('/users', celebrate(commonQuerySchema), getAllUsers);
 router.get('/users/me', authenticate, getCurrentUser);
-router.get('/users/popular', getPopularUsers);
+
 router.get(
   '/users/my-stories',
   authenticate,
-  celebrate(getCurrentUserStoriesSchema),
+  celebrate(commonQuerySchema),
   getCurrentUserStories,
 );
 router.get(
   '/users/saved-stories',
   authenticate,
-  celebrate(getAllUsersSchema),
+  celebrate(commonQuerySchema),
   getSavedStories,
 );
 router.get('/users/:userId', celebrate(getUserByIdSchema), getUserByID);
