@@ -145,6 +145,7 @@ export const getUserByID = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getCurrentUserStories = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -171,3 +172,37 @@ export const getCurrentUserStories = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSavedStories = async(req, res) => {
+  try{
+      const { page = 1, limit = 4 } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+
+      const savedStories = await Story.find({ _id: req.user.savedArticles})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+      if(!savedStories) return res.status(404).json({
+            status: 'error',
+            message: 'Збережені історії відсутні',
+          });
+
+      const totalSavedStories = await Story.countDocuments({ _id: req.user.savedArticles});
+      const totalPages = Math.ceil(totalSavedStories / Number(limit));
+
+      res.status(200).json({
+        savedStories,
+        page: Number(page),
+        limit: limit,
+        totalSavedStories,
+        totalPages
+      })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Помилка сервера',
+      error: error.message,
+    });
+    next();
+  }
+}

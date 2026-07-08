@@ -8,6 +8,7 @@ import {
   unsaveStory,
   getUserByID,
   getCurrentUserStories,
+  getSavedStories,
 } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
@@ -32,6 +33,7 @@ router.get(
   celebrate(getCurrentUserStoriesSchema),
   getCurrentUserStories,
 );
+router.get('/users/saved-stories', authenticate, celebrate(getAllUsersSchema), getSavedStories);
 router.get('/users/:userId', celebrate(getUserByIdSchema), getUserByID);
 
 router.post(
