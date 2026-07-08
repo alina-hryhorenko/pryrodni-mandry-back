@@ -34,6 +34,7 @@ const storySchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false
   },
 );
 

@@ -1,15 +1,18 @@
+import mongoose from 'mongoose';
 import { Story } from '../models/story.js';
 
 export const getAllStories = async (req, res) => {
   const { page = 1, limit = 9, category, sort } = req.query;
   const filter = {};
   if (category) {
-    filter.category = category;
+    filter.category = new mongoose.Types.ObjectId(category); // Якщо передано категорію, додаємо її до фільтра, конвертуючи рядок у об'єкт ObjectId для MongoDB
   }
   const pipeline = [];
   //фільтрація по категоріях
   if (category) {
-    pipeline.push({ $match: filter });
+    pipeline.push({ 
+        $match: filter 
+    });
   }
   //сортування за нові\популярні
   if (sort === 'new') {
@@ -100,14 +103,6 @@ export const getStoryByStoryId = async (req, res) => {
     });
   }
 };
-
-export const getStoryByUserId = (req, res) => {
-  res.res(200).json();
-};
-
-// export const getStoryByCategory = (req, res) => {
-//     return res.status(200).json();
-// }
 
 export const createStory = async (req, res) => {
   const story = await Story.create({
