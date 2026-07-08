@@ -11,7 +11,6 @@ import storiesRoutes from './routes/storiesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
-import healthRoutes from './routes/healthRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 
 import dns from 'node:dns';
@@ -38,7 +37,6 @@ app.use(logger);
 app.use(authRoutes);
 app.use('/api', storiesRoutes);
 app.use('/api', userRoutes);
-app.use('/api', healthRoutes);
 app.use('/api', categoryRoutes);
 
 app.use(notFoundHandler);

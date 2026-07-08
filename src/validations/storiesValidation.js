@@ -10,8 +10,7 @@ const objectIdValidator = (value, helpers) => {
 export const getAllStoriesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).default(9),
-    // category: Joi.string().valid(...CATEGORIES),
+    limit: Joi.number().integer().min(1).max(9).default(9),
     category: Joi.string().custom(objectIdValidator),
     sort: Joi.string().valid('new', 'popular'),
   }),
@@ -33,9 +32,7 @@ export const createStorySchema = {
   [Segments.BODY]: Joi.object({
     img: Joi.string().required(),
     title: Joi.string().trim().required(),
-    category: Joi.string()
-      .custom(objectIdValidator)
-      .required(),
+    category: Joi.string().custom(objectIdValidator).required(),
     article: Joi.string().trim().required(),
   }),
 };

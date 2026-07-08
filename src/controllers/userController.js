@@ -26,18 +26,6 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
-export const getPopularUsers = async (req, res) => {
-  const popularUsersQuery = User.find();
-
-  popularUsersQuery.where('articlesAmount').gt(0);
-
-  const popularUsers = await popularUsersQuery
-    .sort({ articlesAmount: -1 })
-    .limit(12);
-
-  res.status(200).json({ popularUsers });
-};
-
 export const getCurrentUser = async (req, res, next) => {
   try {
     res.status(200).json(req.user);
@@ -79,16 +67,23 @@ export const saveStory = async (req, res) => {
       message: 'Історію збережено',
     });
   } catch (error) {
-    return res.status(500).json({
-      message: 'Помилка сервера',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 export const unsaveStory = async (req, res, next) => {
   try {
     const { storyId } = req.params;
+
+    const user = await User.findById(req.user._id);
+
+    // Якщо історії НЕМАЄ в масиві збережених — повертаємо помилку і зупиняємо процес
+    if (!user.savedArticles.includes(storyId)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Ця історія не була збережена вами',
+      });
+    }
 
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { savedArticles: storyId },
@@ -103,10 +98,7 @@ export const unsaveStory = async (req, res, next) => {
       message: 'Історію видалено зі збережених',
     });
   } catch (error) {
-    return res.status(500).json({
-      message: 'Помилка сервера',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
@@ -125,12 +117,20 @@ export const getUserByID = async (req, res, next) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const stories = await Story.find({ ownerId: userId })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit));
+    // const stories = await Story.find({ ownerId: userId })
+    //   .sort({ createdAt: -1 })
+    //   .skip(skip)
+    //   .limit(Number(limit));
 
-    const totalStories = user.articlesAmount;
+    // const totalStories = user.articlesAmount;
+    const [stories, totalStories] = await Promise.all([
+      Story.find({ ownerId: userId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit)),
+      Story.countDocuments({ ownerId: userId }), // Рахуємо актуальну кількість
+    ]);
+
     const totalPages = Math.ceil(totalStories / Number(limit));
 
     res.status(200).json({
@@ -173,36 +173,35 @@ export const getCurrentUserStories = async (req, res, next) => {
   }
 };
 
-export const getSavedStories = async(req, res) => {
-  try{
-      const { page = 1, limit = 4 } = req.query;
-      const skip = (Number(page) - 1) * Number(limit);
+export const getSavedStories = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 4 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
 
-      const savedStories = await Story.find({ _id: req.user.savedArticles})
+    const savedStories = await Story.find({ _id: req.user.savedArticles })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
 
-      if(!savedStories) return res.status(404).json({
-            status: 'error',
-            message: 'Збережені історії відсутні',
-          });
+    if (!savedStories)
+      return res.status(404).json({
+        status: 'error',
+        message: 'Збережені історії відсутні',
+      });
 
-      const totalSavedStories = await Story.countDocuments({ _id: req.user.savedArticles});
-      const totalPages = Math.ceil(totalSavedStories / Number(limit));
-
-      res.status(200).json({
-        savedStories,
-        page: Number(page),
-        limit: limit,
-        totalSavedStories,
-        totalPages
-      })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Помилка сервера',
-      error: error.message,
+    const totalSavedStories = await Story.countDocuments({
+      _id: req.user.savedArticles,
     });
-    next();
+    const totalPages = Math.ceil(totalSavedStories / Number(limit));
+
+    res.status(200).json({
+      savedStories,
+      page: Number(page),
+      limit: limit,
+      totalSavedStories,
+      totalPages,
+    });
+  } catch (error) {
+    next(error);
   }
-}
+};

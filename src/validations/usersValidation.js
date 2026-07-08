@@ -6,26 +6,19 @@ const objectIdValidator = (value, helpers) => {
   return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
 };
 
-export const getAllUsersSchema = {
+export const commonQuerySchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(50).default(4),
+    limit: Joi.number().integer().min(1).max(9).default(4),
   }),
 };
 
 export const getUserByIdSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(50).default(4),
+    limit: Joi.number().integer().min(1).max(9).default(4),
   }),
   [Segments.PARAMS]: Joi.object({
     userId: Joi.string().custom(objectIdValidator).required(),
-  }),
-};
-
-export const getCurrentUserStoriesSchema = {
-  [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(50).default(4),
   }),
 };
