@@ -2,13 +2,17 @@ import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errors } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import helmet from 'helmet';
 import storiesRoutes from './routes/storiesRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import { connectMongoDB } from './db/connectMongoDB.js';
+import healthRoutes from './routes/healthRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 
 import dns from 'node:dns';
 dns.setServers(['1.1.1.1', '8.8.8.8']);
@@ -31,10 +35,12 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(logger);
 
-// Routes
-app.use(storiesRoutes);
+app.use(authRoutes);
+app.use('/api', storiesRoutes);
+app.use('/api', userRoutes);
+app.use('/api', healthRoutes);
+app.use('/api', categoryRoutes);
 
-// Error Handlers
 app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);

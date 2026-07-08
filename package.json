@@ -18,11 +18,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/db/seed.js"
+    "seed": "node src/db/seed.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "celebrate": "^15.0.3",
+    "celebrate": "^12.1.2",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
