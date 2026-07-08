@@ -8,6 +8,7 @@ import {
   getUserByID,
   getCurrentUserStories,
   getSavedStories,
+  updateUserAvatar,
 } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
@@ -19,6 +20,7 @@ import {
   storyIdBodySchema,
   storyIdSchema,
 } from '../validations/storiesValidation.js';
+import { upload } from '../middleware/multer.js';
 
 const router = Router();
 
@@ -50,6 +52,14 @@ router.delete(
   authenticate,
   celebrate(storyIdSchema),
   unsaveStory,
+);
+
+// Update user avatar route
+router.patch(
+  '/users/me/avatar',
+  authenticate,
+  upload.single('avatar'),
+  updateUserAvatar,
 );
 
 export default router;
