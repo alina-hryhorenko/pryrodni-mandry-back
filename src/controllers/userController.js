@@ -3,7 +3,7 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import { Story } from '../models/story.js';
 
-export const getUsers = async (req, res, next) => {
+export const getAllUsers = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
@@ -135,6 +135,32 @@ export const getUserByID = async (req, res, next) => {
 
     res.status(200).json({
       user,
+      stories,
+      page: Number(page),
+      limit: Number(limit),
+      totalStories,
+      totalPages,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getCurrentUserStories = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { page = 1, limit = 4 } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const stories = await Story.find({ ownerId: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const totalStories = await Story.countDocuments({ ownerId: userId });
+    const totalPages = Math.ceil(totalStories / Number(limit));
+
+    res.status(200).json({
       stories,
       page: Number(page),
       limit: Number(limit),

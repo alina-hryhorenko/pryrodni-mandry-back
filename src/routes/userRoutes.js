@@ -1,18 +1,20 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 import {
-  getUsers,
+  getAllUsers,
   getPopularUsers,
   getCurrentUser,
   saveStory,
   unsaveStory,
   getUserByID,
+  getCurrentUserStories,
 } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
 import {
-  getUsersSchema,
+  getAllUsersSchema,
   getUserByIdSchema,
+  getCurrentUserStoriesSchema,
 } from '../validations/usersValidation.js';
 import {
   storyIdBodySchema,
@@ -21,9 +23,15 @@ import {
 
 const router = Router();
 
-router.get('/users', celebrate(getUsersSchema), getUsers);
+router.get('/users', celebrate(getAllUsersSchema), getAllUsers);
 router.get('/users/me', authenticate, getCurrentUser);
 router.get('/users/popular', getPopularUsers);
+router.get(
+  '/users/my-stories',
+  authenticate,
+  celebrate(getCurrentUserStoriesSchema),
+  getCurrentUserStories,
+);
 router.get('/users/:userId', celebrate(getUserByIdSchema), getUserByID);
 
 router.post(
