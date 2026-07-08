@@ -3,7 +3,6 @@ import {
   getAllStories,
   getPopularStories,
   getStoryByStoryId,
-  getStoryByUserId,
   createStory,
 } from '../controllers/storiesController.js';
 import {
@@ -11,8 +10,8 @@ import {
   getAllStoriesSchema,
   storyIdSchema,
 } from '../validations/storiesValidation.js';
-
 import { celebrate } from 'celebrate';
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = Router();
 
@@ -20,9 +19,8 @@ const router = Router();
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
 router.get('/stories/popular', getPopularStories);
 router.get('/story/:storyId', celebrate(storyIdSchema), getStoryByStoryId);
-router.get('/stories/:userId', getStoryByUserId);
 
 // POST
-router.post('/stories', celebrate(createStorySchema), createStory);
+router.post('/stories', authenticate, celebrate(createStorySchema), createStory);
 
 export default router;
