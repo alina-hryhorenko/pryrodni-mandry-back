@@ -9,14 +9,14 @@ export const loginUser = async (req, res) => {
 
   // Перевіряємо чи користувач з такою поштою існує
   const user = await User.findOne({ email });
-  console.log(user);
+
   if (!user) {
     throw createHttpError(401, 'Invalid credentials');
   }
 
   // Порівнюємо хеші паролів
   const isValidPassword = await bcrypt.compare(password, user.password);
-  console.log(isValidPassword);
+
   if (!isValidPassword) {
     throw createHttpError(401, 'Invalid credentials');
   }
@@ -87,6 +87,7 @@ export const refreshUserSession = async (req, res) => {
 
   res.status(200).json({ message: 'Session refreshed' });
 };
+
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 

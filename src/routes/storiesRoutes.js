@@ -21,6 +21,11 @@ router.get('/stories/popular', getPopularStories);
 router.get('/story/:storyId', celebrate(storyIdSchema), getStoryByStoryId);
 
 // POST
-router.post('/stories', authenticate, celebrate(createStorySchema), createStory);
+router.post(
+  '/stories',
+  authenticate,
+  celebrate(createStorySchema),
+  createStory,
+);
 
 export default router;
