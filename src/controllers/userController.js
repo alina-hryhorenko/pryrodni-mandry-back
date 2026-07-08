@@ -34,3 +34,11 @@ export const getPopularUsers = async (req, res) => {
 
   res.status(200).json({ popularUsers });
 };
+
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
+  }
+};
