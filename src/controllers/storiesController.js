@@ -101,13 +101,13 @@ export const getStoryByStoryId = async (req, res) => {
   }
 };
 
+// export const getRecomendedStories = (req, res) => {
+
+// }
+
 export const getStoryByUserId = (req, res) => {
   res.res(200).json();
 };
-
-// export const getStoryByCategory = (req, res) => {
-//     return res.status(200).json();
-// }
 
 export const createStory = (req, res) => {
   res.res(200).json();

@@ -14,6 +14,7 @@ router.get('/stories', getAllStories);
 router.get('/stories/popular', getPopularStories);
 router.get('/story/:storyId', getStoryByStoryId);
 router.get('/stories/:userId', getStoryByUserId);
+// router.get('/stories/recomended', getRecomendedStories);
 
 // POST
 router.post('/stories', createStory);
