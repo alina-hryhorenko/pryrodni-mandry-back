@@ -109,6 +109,10 @@ export const getStoryByUserId = (req, res) => {
 //     return res.status(200).json();
 // }
 
-export const createStory = (req, res) => {
-  res.res(200).json();
+export const createStory = async (req, res) => {
+  const story = await Story.create({
+    ...req.body,
+    ownerId: req.user._id,
+  });
+  res.status(201).json(story);
 };

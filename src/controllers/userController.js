@@ -1,4 +1,5 @@
 import { User } from '../models/user.js';
+import { Story } from '../models/story.js';
 
 export const getUsers = async (req, res, next) => {
   try {
@@ -40,5 +41,69 @@ export const getCurrentUser = async (req, res, next) => {
     res.status(200).json(req.user);
   } catch (error) {
     next(error);
+  }
+};
+
+export const saveStory = async (req, res) => {
+  try {
+    const { storyId } = req.body;
+
+    const story = await Story.findById(storyId);
+    if (!story) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Така історія відсутня',
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (user.savedArticles.includes(storyId)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Історія вже збережена',
+      });
+    }
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: { savedArticles: storyId },
+    });
+
+    await Story.findByIdAndUpdate(storyId, {
+      $inc: { rate: 1 },
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Історію збережено',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Помилка сервера',
+      error: error.message,
+    });
+  }
+};
+
+export const unsaveStory = async (req, res, next) => {
+  try {
+    const { storyId } = req.params;
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $pull: { savedArticles: storyId },
+    });
+
+    await Story.findByIdAndUpdate(storyId, {
+      $inc: { rate: -1 },
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Історію видалено зі збережених',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Помилка сервера',
+      error: error.message,
+    });
   }
 };
