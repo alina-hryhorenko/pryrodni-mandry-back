@@ -2,18 +2,19 @@ import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { CATEGORIES } from '../constants/tags.js';
 
+// Валідатор для ObjectId
+const objectIdValidator = (value, helpers) => {
+  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+};
+
 export const getAllStoriesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).default(9),
-    category: Joi.string().valid(...CATEGORIES),
+    // category: Joi.string().valid(...CATEGORIES),
+    category: Joi.string().custom(objectIdValidator),
     sort: Joi.string().valid('new', 'popular'),
   }),
-};
-
-// Валідатор для ObjectId
-const objectIdValidator = (value, helpers) => {
-  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
 };
 
 // Схема для перевірки параметра storyId
@@ -22,14 +23,19 @@ export const storyIdSchema = {
     storyId: Joi.string().custom(objectIdValidator).required(),
   }),
 };
+export const storyIdBodySchema = {
+  [Segments.BODY]: Joi.object({
+    storyId: Joi.string().custom(objectIdValidator).required(),
+  }),
+};
 
 export const createStorySchema = {
   [Segments.BODY]: Joi.object({
     img: Joi.string().required(),
     title: Joi.string().trim().required(),
-    category: Joi.string().valid(...CATEGORIES).required(),
+    category: Joi.string()
+      .custom(objectIdValidator)
+      .required(),
     article: Joi.string().trim().required(),
-    rate: Joi.number(),
   }),
 };
-
