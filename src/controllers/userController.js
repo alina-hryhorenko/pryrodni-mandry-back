@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 
 import { User } from '../models/user.js';
 import { Story } from '../models/story.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -173,31 +174,34 @@ export const getCurrentUserStories = async (req, res, next) => {
   }
 };
 
-export const getSavedStories = async(req, res) => {
-  try{
-      const { page = 1, limit = 4 } = req.query;
-      const skip = (Number(page) - 1) * Number(limit);
+export const getSavedStories = async (req, res) => {
+  try {
+    const { page = 1, limit = 4 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
 
-      const savedStories = await Story.find({ _id: req.user.savedArticles})
+    const savedStories = await Story.find({ _id: req.user.savedArticles })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
 
-      if(!savedStories) return res.status(404).json({
-            status: 'error',
-            message: 'Збережені історії відсутні',
-          });
+    if (!savedStories)
+      return res.status(404).json({
+        status: 'error',
+        message: 'Збережені історії відсутні',
+      });
 
-      const totalSavedStories = await Story.countDocuments({ _id: req.user.savedArticles});
-      const totalPages = Math.ceil(totalSavedStories / Number(limit));
+    const totalSavedStories = await Story.countDocuments({
+      _id: req.user.savedArticles,
+    });
+    const totalPages = Math.ceil(totalSavedStories / Number(limit));
 
-      res.status(200).json({
-        savedStories,
-        page: Number(page),
-        limit: limit,
-        totalSavedStories,
-        totalPages
-      })
+    res.status(200).json({
+      savedStories,
+      page: Number(page),
+      limit: limit,
+      totalSavedStories,
+      totalPages,
+    });
   } catch (error) {
     res.status(500).json({
       message: 'Помилка сервера',
@@ -205,4 +209,34 @@ export const getSavedStories = async(req, res) => {
     });
     next();
   }
-}
+};
+
+// Update user avatar contorller
+export const updateUserAvatar = async (req, res, next) => {
+  try {
+    const { file, user } = req;
+
+    if (!file) {
+      throw createHttpError(400, 'No file');
+    }
+
+    const result = await saveFileToCloudinary(file.buffer, user._id);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { avatarUrl: result.secure_url },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updatedUser) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    res.status(200).json({ url: updatedUser.avatarUrl });
+  } catch (error) {
+    next(error);
+  }
+};
