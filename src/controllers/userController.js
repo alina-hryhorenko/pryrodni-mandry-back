@@ -35,7 +35,7 @@ export const getCurrentUser = async (req, res, next) => {
   }
 };
 
-export const saveStory = async (req, res) => {
+export const saveStory = async (req, res, next) => {
   try {
     const { storyId } = req.body;
 
@@ -174,10 +174,6 @@ export const getCurrentUserStories = async (req, res, next) => {
   }
 };
 
-export const getSavedStories = async (req, res) => {
-  try {
-    const { page = 1, limit = 4 } = req.query;
-    const skip = (Number(page) - 1) * Number(limit);
 export const getSavedStories = async (req, res, next) => {
   try {
     const { page = 1, limit = 4 } = req.query;
@@ -202,13 +198,31 @@ export const getSavedStories = async (req, res, next) => {
     res.status(200).json({
       savedStories,
       page: Number(page),
-      limit: limit,
+      limit: Number(limit),
       totalSavedStories,
       totalPages,
     });
   } catch (error) {
     next(error);
-  };
+  }
 };
-  };
+
+export const updateUserAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw createHttpError(400, 'Avatar file is required');
+    }
+
+    const avatarUrl = await saveFileToCloudinary(req.file);
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { avatarUrl },
+      { new: true },
+    ).select('-password');
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
 };
