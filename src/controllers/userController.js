@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 
 import { User } from '../models/user.js';
 import { Story } from '../models/story.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -173,6 +174,10 @@ export const getCurrentUserStories = async (req, res, next) => {
   }
 };
 
+export const getSavedStories = async (req, res) => {
+  try {
+    const { page = 1, limit = 4 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
 export const getSavedStories = async (req, res, next) => {
   try {
     const { page = 1, limit = 4 } = req.query;
@@ -203,5 +208,7 @@ export const getSavedStories = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  }
+  };
+};
+  };
 };
