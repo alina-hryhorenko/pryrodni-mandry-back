@@ -1,12 +1,12 @@
-import { Router } from 'express'
-import { 
-    getAllStories, 
-    getPopularStories, 
-    getStoryByStoryId,
-    getStoryByUserId,
-    // getStoryByCategory,
-    createStory
-} from '../controllers/storiesController';
+import { Router } from 'express';
+import {
+  getAllStories,
+  getPopularStories,
+  getStoryByStoryId,
+  getStoryByUserId,
+  // getStoryByCategory,
+  createStory,
+} from '../controllers/storiesController.js';
 
 const router = Router();
 
