@@ -1,6 +1,5 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
-import { CATEGORIES } from '../constants/tags.js';
 
 // Валідатор для ObjectId
 const objectIdValidator = (value, helpers) => {
@@ -30,7 +29,7 @@ export const storyIdBodySchema = {
 
 export const createStorySchema = {
   [Segments.BODY]: Joi.object({
-    img: Joi.string().required(),
+    // img: Joi.string().required(),
     title: Joi.string().trim().required(),
     category: Joi.string().custom(objectIdValidator).required(),
     article: Joi.string().trim().required(),

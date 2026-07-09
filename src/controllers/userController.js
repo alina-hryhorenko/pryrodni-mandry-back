@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 
 import { User } from '../models/user.js';
 import { Story } from '../models/story.js';
-import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { saveAvatarFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -118,12 +118,6 @@ export const getUserByID = async (req, res, next) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // const stories = await Story.find({ ownerId: userId })
-    //   .sort({ createdAt: -1 })
-    //   .skip(skip)
-    //   .limit(Number(limit));
-
-    // const totalStories = user.articlesAmount;
     const [stories, totalStories] = await Promise.all([
       Story.find({ ownerId: userId })
         .sort({ createdAt: -1 })
@@ -213,11 +207,14 @@ export const updateUserAvatar = async (req, res, next) => {
       throw createHttpError(400, 'Avatar file is required');
     }
 
-    const avatarUrl = await saveFileToCloudinary(req.file);
+    const uploadResult = await saveAvatarFileToCloudinary(
+      req.file.buffer,
+      req.user._id,
+    );
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { avatarUrl },
+      { avatarUrl: uploadResult.secure_url },
       { new: true },
     ).select('-password');
 
