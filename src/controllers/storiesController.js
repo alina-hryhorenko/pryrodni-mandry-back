@@ -35,7 +35,7 @@ export const getAllStories = async (req, res, next) => {
     pipeline.push({
       $lookup: {
         from: 'users',
-        localField: 'author',
+        localField: 'ownerId',
         foreignField: '_id',
         as: 'authorData',
       },
@@ -95,22 +95,20 @@ export const getStoryByStoryId = async (req, res, next) => {
   try {
     const { storyId } = req.params;
 
-    const storyDoc = await Story.findById(storyId).populate('ownerId');
+    const story = await Story.findById(storyId).populate('ownerId');
 
-    if (!storyDoc) {
+    if (!story) {
       return res.status(404).json({
         message: 'Така історія відсутня',
       });
     }
 
-    const story = storyDoc.toObject();
-    const storyCategory = await Category.findById(story.category);
+    // const storyCategory = await Category.findById(story.category);
 
     return res.status(200).json({
       status: 200,
       data: {
-        ...story,
-        category: storyCategory.category
+        story
       }
     });
   } catch (error) {
