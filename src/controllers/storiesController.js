@@ -37,10 +37,10 @@ export const getAllStories = async (req, res, next) => {
         from: 'users',
         localField: 'ownerId',
         foreignField: '_id',
-        as: 'authorData',
+        as: 'ownerId',
       },
     });
-    pipeline.push({ $unwind: '$authorData' });
+    pipeline.push({ $unwind: '$ownerId' });
     //агрегація
     const stories = await Story.aggregate(pipeline);
     //кількість сторінок
@@ -75,7 +75,7 @@ export const getPopularStories = async (req, res, next) => {
       title: story.title,
       img: story.img,
       savedBySize: story.rate,
-      authorData: {
+      ownerId: {
         _id: story.ownerId._id,
         name: story.ownerId.name,
         avatarURL: story.ownerId.avatarURL,
