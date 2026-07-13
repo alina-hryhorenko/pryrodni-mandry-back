@@ -3,6 +3,7 @@ import createHttpError from 'http-errors';
 import crypto from 'crypto';
 import { Story } from '../models/story.js';
 import { saveStoryImageFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { Category } from '../models/category.js';
 
 export const getAllStories = async (req, res, next) => {
   try {
@@ -94,15 +95,24 @@ export const getStoryByStoryId = async (req, res, next) => {
   try {
     const { storyId } = req.params;
 
-    const story = await Story.findById(storyId).populate('ownerId');
+    const storyDoc = await Story.findById(storyId).populate('ownerId');
 
-    if (!story) {
+    if (!storyDoc) {
       return res.status(404).json({
         message: 'Така історія відсутня',
       });
     }
 
-    return res.status(200).json(story);
+    const story = storyDoc.toObject();
+    const storyCategory = await Category.findById(story.category);
+
+    return res.status(200).json({
+      status: 200,
+      data: {
+        ...story,
+        category: storyCategory.category
+      }
+    });
   } catch (error) {
     next(error);
   }
