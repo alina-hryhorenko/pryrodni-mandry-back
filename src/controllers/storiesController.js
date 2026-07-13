@@ -75,7 +75,7 @@ export const getPopularStories = async (req, res, next) => {
       title: story.title,
       img: story.img,
       savedBySize: story.rate,
-      author: {
+      authorData: {
         _id: story.ownerId._id,
         name: story.ownerId.name,
         avatarURL: story.ownerId.avatarURL,
