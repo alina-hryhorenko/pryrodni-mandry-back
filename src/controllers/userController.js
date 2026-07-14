@@ -203,22 +203,29 @@ export const getSavedStories = async (req, res, next) => {
 
 export const updateUserAvatar = async (req, res, next) => {
   try {
-    if (!req.file) {
+    const { file, user } = req;
+
+    if (!file) {
       throw createHttpError(400, 'Avatar file is required');
     }
 
-    const uploadResult = await saveAvatarFileToCloudinary(
-      req.file.buffer,
-      req.user._id,
-    );
+    const result = await saveAvatarFileToCloudinary(file.buffer, user._id);
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { avatarUrl: uploadResult.secure_url },
+    if (!result?.secure_url) {
+      throw createHttpError(502, 'Failed to upload avatar');
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { avatarUrl: result.secure_url },
       { new: true },
-    ).select('-password');
+    ).select('avatarUrl');
 
-    res.status(200).json(user);
+    if (!updatedUser) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    res.status(200).json({ url: updatedUser.avatarUrl });
   } catch (error) {
     next(error);
   }
