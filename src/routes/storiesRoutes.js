@@ -12,6 +12,7 @@ import {
 } from '../validations/storiesValidation.js';
 import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/multer.js';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.get('/story/:storyId', celebrate(storyIdSchema), getStoryByStoryId);
 router.post(
   '/stories',
   authenticate,
+  upload.single('img'),
   celebrate(createStorySchema),
   createStory,
 );

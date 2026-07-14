@@ -7,22 +7,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function saveFileToCloudinary(buffer, userId) {
-  const option = {
-    folder: 'nature-travels-app/avatars',
-    public_id: `avatar_${userId}`,
-    resource_type: 'image',
-    overwrite: true,
-    unique_filename: false,
-    transformation: [
-      { width: 500, height: 500, crop: 'fill', gravity: 'auto' },
-      { fetch_format: 'auto', quality: 'auto' },
-    ],
-  };
-
+function uploadToCloudinary(buffer, options) {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      option,
+      options,
       (error, result) => {
         if (error) {
           return reject(error);
@@ -32,5 +20,30 @@ export async function saveFileToCloudinary(buffer, userId) {
     );
 
     uploadStream.end(buffer);
+  });
+}
+
+export function saveFileToCloudinary(buffer, userId) {
+  return uploadToCloudinary(buffer, {
+    folder: 'nature-travels-app/avatars',
+    public_id: `avatar_${userId}`,
+    resource_type: 'image',
+    overwrite: true,
+    unique_filename: false,
+    transformation: [
+      { width: 500, height: 500, crop: 'fill', gravity: 'auto' },
+      { fetch_format: 'auto', quality: 'auto' },
+    ],
+  });
+}
+
+export function saveStoryImageToCloudinary(buffer) {
+  return uploadToCloudinary(buffer, {
+    folder: 'nature-travels-app/stories',
+    resource_type: 'image',
+    transformation: [
+      { width: 1200, crop: 'limit' },
+      { fetch_format: 'auto', quality: 'auto' },
+    ],
   });
 }

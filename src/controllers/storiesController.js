@@ -1,5 +1,8 @@
+import createHttpError from 'http-errors';
+
 import mongoose from 'mongoose';
 import { Story } from '../models/story.js';
+import { saveStoryImageToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllStories = async (req, res, next) => {
   try {
@@ -107,10 +110,18 @@ export const getStoryByStoryId = async (req, res, next) => {
 
 export const createStory = async (req, res, next) => {
   try {
+    if (!req.file) {
+      throw createHttpError(400, 'Image is required');
+    }
+
+    const storyImageUrl = await saveStoryImageToCloudinary(req.file.buffer);
+
     const story = await Story.create({
       ...req.body,
+      img: storyImageUrl.secure_url,
       ownerId: req.user._id,
     });
+
     res.status(201).json(story);
   } catch (error) {
     next(error);
