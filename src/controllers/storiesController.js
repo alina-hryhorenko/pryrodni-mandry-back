@@ -111,7 +111,10 @@ export const getStoryByStoryId = async (req, res, next) => {
       status: 200,
       data: {
         ...story,
-        category: storyCategory.category
+        category: {
+          id: storyCategory._id,
+          name: storyCategory.category
+        }
       }
     });
   } catch (error) {
