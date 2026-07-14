@@ -35,12 +35,12 @@ export const getAllStories = async (req, res, next) => {
     pipeline.push({
       $lookup: {
         from: 'users',
-        localField: 'author',
+        localField: 'ownerId',
         foreignField: '_id',
-        as: 'authorData',
+        as: 'ownerId',
       },
     });
-    pipeline.push({ $unwind: '$authorData' });
+    pipeline.push({ $unwind: '$ownerId' });
     //агрегація
     const stories = await Story.aggregate(pipeline);
     //кількість сторінок
@@ -75,7 +75,7 @@ export const getPopularStories = async (req, res, next) => {
       title: story.title,
       img: story.img,
       savedBySize: story.rate,
-      author: {
+      ownerId: {
         _id: story.ownerId._id,
         name: story.ownerId.name,
         avatarURL: story.ownerId.avatarURL,
@@ -104,13 +104,17 @@ export const getStoryByStoryId = async (req, res, next) => {
     }
 
     const story = storyDoc.toObject();
+
     const storyCategory = await Category.findById(story.category);
 
     return res.status(200).json({
       status: 200,
       data: {
         ...story,
-        category: storyCategory.category
+        category: {
+          id: storyCategory._id,
+          name: storyCategory.category
+        }
       }
     });
   } catch (error) {
