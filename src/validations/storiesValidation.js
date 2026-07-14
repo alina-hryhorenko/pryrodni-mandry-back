@@ -30,8 +30,8 @@ export const storyIdBodySchema = {
 export const createStorySchema = {
   [Segments.BODY]: Joi.object({
     // img: Joi.string().required(),
-    title: Joi.string().trim().required(),
+    title: Joi.string().trim().min(2).max(40).required(),
     category: Joi.string().custom(objectIdValidator).required(),
-    article: Joi.string().trim().required(),
+    article: Joi.string().trim().min(12).max(3000).required(),
   }),
 };
