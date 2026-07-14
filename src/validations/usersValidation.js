@@ -8,8 +8,8 @@ const objectIdValidator = (value, helpers) => {
 
 export const commonQuerySchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(12).default(4),
+    page: Joi.number().integer().min(1).default(1).required(),
+    limit: Joi.number().integer().min(1).max(12).default(4).required(),
   }),
 };
 
