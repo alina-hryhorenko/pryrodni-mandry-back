@@ -151,7 +151,8 @@ export const getCurrentUserStories = async (req, res, next) => {
     const stories = await Story.find({ ownerId: userId })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(Number(limit));
+      .limit(Number(limit))
+      .populate('ownerId', 'name avatarURL');
 
     const totalStories = await Story.countDocuments({ ownerId: userId });
     const totalPages = Math.ceil(totalStories / Number(limit));
@@ -176,7 +177,8 @@ export const getSavedStories = async (req, res, next) => {
     const savedStories = await Story.find({ _id: req.user.savedArticles })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(Number(limit));
+      .limit(Number(limit))
+      .populate('ownerId', 'name avatarURL');
 
     if (!savedStories)
       return res.status(404).json({
